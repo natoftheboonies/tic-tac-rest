@@ -1,8 +1,10 @@
-from flask import Flask
-from flask_restful import reqparse, abort, Api, Resource
 import random, string
 
+from flask import Flask
+from flask_restful import reqparse, abort, Api, Resource
+
 app = Flask(__name__)
+
 api = Api(app)
 
 GAMES = {}
@@ -65,6 +67,7 @@ class Game(Resource):
             print("X wins", win)
             game["turn"] = None
             game["winner"] = ("X", game["playerX"])
+            game["win"] = win
         elif any([win.issubset(game['O']) for win in WINS]):
             win = list([win for win in WINS if win.issubset(game['O'])][0])
             print("O wins", win)
@@ -110,6 +113,5 @@ class GameList(Resource):
 api.add_resource(GameList, '/games')
 api.add_resource(Game, '/games/<game_id>')
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tic-Tac-Toe Monitor</title>
+    <style>
+      /* Courtesy of ChatGTP */
+      table {
+        border-collapse: collapse;
+      }
+      td {
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        vertical-align: middle;
+        border: 1px solid black;
+        font-size: 30px;
+        font-weight: bold;
+        /* cursor: pointer;*/
+      }
+      .win {
+        background-color: lightgoldenrodyellow;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tic-Tac-Toe Monitor</h1>
+    <p>Game ID: <span id="gameId">None, reload once started.</span></p>
+    <table>
+      <tr>
+        <td id="cell-0"></td>
+        <td id="cell-1"></td>
+        <td id="cell-2"></td>
+      </tr>
+      <tr>
+        <td id="cell-10"></td>
+        <td id="cell-11"></td>
+        <td id="cell-12"></td>
+      </tr>
+      <tr>
+        <td id="cell-20"></td>
+        <td id="cell-21"></td>
+        <td id="cell-22"></td>
+      </tr>
+    </table>
+    <p>Players:</p>
+    <ul>
+      <li>❌ <span id="playerX">waiting...</span></li>
+      <li>⭕️ <span id="playerO">waiting...</span></li>
+    </ul>
+    <p>Next: <span id="turn">?</span></p>
+  </body>
+  <script>
+    const pieceX = "❌";
+    const pieceO = "⭕️";
+
+    // fetchGame asks the server for the current state of this game
+    async function fetchGame(gameId) {
+      //console.log("fetching game", gameId);
+      const gameRes = await fetch("/games/" + gameId);
+      const gameData = await gameRes.json();
+      // with the result, we call updateGame to update the web page
+      updateGame(gameData);
+    }
+
+    function updateGame(game) {
+      // record the players (we don't need to do this every time)
+      document.getElementById("playerX").innerText =
+        game.playerX || "waiting...";
+      document.getElementById("playerO").innerText =
+        game.playerO || "waiting...";
+      // update the board with X's and O's
+      game.X.forEach((element) => {
+        document.getElementById("cell-" + element).innerHTML = pieceX;
+      });
+      game.O.forEach((element) => {
+        document.getElementById("cell-" + element).innerHTML = pieceO;
+      });
+      // if game is awaiting a player, update the "Next" element
+      if (game.turn) {
+        if (game.turn == "X")
+          document.getElementById("turn").innerText = pieceX;
+        else if (game.turn == "O")
+          document.getElementById("turn").innerText = pieceO;
+        else document.getElementById("turn").innerText = "ugh"; // <- bug finder
+      }
+      // or if the game is over, update the Next element
+      if (game.winner) {
+        document.getElementById("turn").innerText =
+          "game over. winner: " + game.winner[1];
+        // and in the case of a win, highlight the winning squares.
+        if (game.win) {
+          game.win.forEach((element) => {
+            document.getElementById("cell-" + element).classList.add("win");
+          });
+        }
+      }
+      // if we have not won yet, start a timeout to fetch this game after 1 second delay.
+      if (!game.winner) setTimeout(fetchGame.bind(null, game.gameId), 1000);
+    }
+
+    // start() called at the bottom of this script block.
+    async function start() {
+      // queries the server for a list of gameIds.
+      const response = await fetch("/games");
+      const jsonData = await response.json();
+      if (jsonData.length >= 1) {
+        // The last is the most recent, so pop it and start
+        gameId = jsonData.pop();
+        document.getElementById("gameId").innerText = gameId;
+        fetchGame(gameId);
+      }
+    }
+    start();
+  </script>
+</html>

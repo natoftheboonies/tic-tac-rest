@@ -29,6 +29,7 @@ def play(piece, game):
         foo = get(GAME_URL+"/games/"+game['gameId'], headers=headers)
         game = foo.json()
         if game['turn'] == piece:
+            time.sleep(2)
             my_play = choice(MOVES)
             while my_play in game['X'] or my_play in game['O']:
                  my_play = choice(MOVES)
@@ -37,7 +38,7 @@ def play(piece, game):
             play = put(GAME_URL+"/games/"+game['gameId'], headers=headers, json=move)
             if play.status_code//100 == 4:
                 print(play.status_code, play.json())
-        time.sleep(3)
+        time.sleep(2)
     result(game)
 
 
