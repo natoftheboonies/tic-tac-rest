@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tic-Tac-Toe Monitor</title>
+    <style>
+      /* Courtesy of ChatGTP */
+      table {
+        border-collapse: collapse;
+      }
+      td {
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        vertical-align: middle;
+        border: 1px solid black;
+        font-size: 30px;
+        font-weight: bold;
+        /* cursor: pointer;*/
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tic-Tac-Toe Monitor</h1>
+    <p>Game ID: rrQw</p>
+    <table>
+      <tr>
+        <td id="cell-0"></td>
+        <td id="cell-1"></td>
+        <td id="cell-2"></td>
+      </tr>
+      <tr>
+        <td id="cell-3"></td>
+        <td id="cell-4">❌</td>
+        <td id="cell-5"></td>
+      </tr>
+      <tr>
+        <td id="cell-6"></td>
+        <td id="cell-7"></td>
+        <td id="cell-8">⭕️</td>
+      </tr>
+    </table>
+    <p>Players:</p>
+    <ul>
+      <li>❌ nat</li>
+      <li>⭕️ alex</li>
+    </ul>
+    <p>Next player: ❌</p>
+    <h3>The idea here...</h3>
+    <p>
+      ... is to write Javascript which connects to the API and polls for
+      updates, every second or so, updating the board as the game progresses.
+    </p>
+  </body>
+</html>
