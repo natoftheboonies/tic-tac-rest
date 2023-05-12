@@ -61,7 +61,7 @@ class Game(Resource):
 
         # check for win
         if any([win.issubset(game['X']) for win in WINS]):
-            win = list([win for win in WINS if win.issubset(game['O'])][0])
+            win = list([win for win in WINS if win.issubset(game['X'])][0])
             print("X wins", win)
             game["turn"] = None
             game["winner"] = ("X", game["playerX"])

@@ -31,8 +31,8 @@ for _ in range(50):
     foo = get(GAME_URL+"/games/"+game['gameId'], headers=headers)
     # print(foo.status_code, foo.json())    
     game = foo.json()
-
-print("winner!",game['winner'])
+if 'winner' in game:
+    print("winner!",game['winner'])
 print(game)
 
 # print the match result
